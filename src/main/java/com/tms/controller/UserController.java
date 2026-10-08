@@ -23,7 +23,15 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDto>> listUsers() {
+    public ResponseEntity<List<UserDto>> listUsers(@RequestParam(required = false) String role) {
+        if (role != null && !role.trim().isEmpty()) {
+            String targetRole = role.trim();
+            return ResponseEntity.ok(
+                userService.getAllUsers().stream()
+                    .filter(u -> u.getRole() != null && u.getRole().trim().equalsIgnoreCase(targetRole))
+                    .toList()
+            );
+        }
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
