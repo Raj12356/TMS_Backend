@@ -16,6 +16,9 @@ public class TaskResponse {
     private Boolean completed;
     private List<String> attachments = new ArrayList<>();
     private List<CommentDto> comments = new ArrayList<>();
+    private Integer transferRequestedTo;
+    private Integer transferRequestedBy;
+    private String transferNote;
 
     public TaskResponse() {
     }
@@ -114,6 +117,30 @@ public class TaskResponse {
 
     public void setComments(List<CommentDto> comments) {
         this.comments = comments != null ? comments : new ArrayList<>();
+    }
+
+    public Integer getTransferRequestedTo() {
+        return transferRequestedTo;
+    }
+
+    public void setTransferRequestedTo(Integer transferRequestedTo) {
+        this.transferRequestedTo = transferRequestedTo;
+    }
+
+    public Integer getTransferRequestedBy() {
+        return transferRequestedBy;
+    }
+
+    public void setTransferRequestedBy(Integer transferRequestedBy) {
+        this.transferRequestedBy = transferRequestedBy;
+    }
+
+    public String getTransferNote() {
+        return transferNote;
+    }
+
+    public void setTransferNote(String transferNote) {
+        this.transferNote = transferNote;
     }
 }
 

@@ -25,8 +25,9 @@ public class TaskController {
     @GetMapping
     public ResponseEntity<List<TaskResponse>> listTasks(
             @RequestParam(required = false) Integer userId,
-            @RequestParam(required = false) Integer assignedTo) {
-        return ResponseEntity.ok(taskService.getTasks(userId, assignedTo));
+            @RequestParam(required = false) Integer assignedTo,
+            @RequestParam(required = false, defaultValue = "false") Boolean includeTransfers) {
+        return ResponseEntity.ok(taskService.getTasks(userId, assignedTo, Boolean.TRUE.equals(includeTransfers)));
     }
 
     @GetMapping("/{id}")
@@ -59,6 +60,21 @@ public class TaskController {
         }
         try {
             Optional<TaskResponse> updated = taskService.updateTask(req.getId(), req, true);
+            if (updated.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Task not found"));
+            }
+            return ResponseEntity.ok(updated.get());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "PATCH failed"));
+        }
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> patchTaskPath(@PathVariable Long id, @RequestBody TaskRequest req) {
+        try {
+            Optional<TaskResponse> updated = taskService.updateTask(id, req, true);
             if (updated.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Task not found"));
             }

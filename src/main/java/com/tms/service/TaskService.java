@@ -28,13 +28,21 @@ public class TaskService {
     }
 
     public List<TaskResponse> getTasks(Integer userId, Integer assignedTo) {
+        return getTasks(userId, assignedTo, false);
+    }
+
+    public List<TaskResponse> getTasks(Integer userId, Integer assignedTo, boolean includeTransfers) {
         List<Task> tasks;
         if (userId != null && assignedTo != null) {
             tasks = taskRepository.findByUserIdAndAssignedToOrderByIdAsc(userId, assignedTo);
         } else if (userId != null) {
             tasks = taskRepository.findByUserIdOrderByIdAsc(userId);
         } else if (assignedTo != null) {
-            tasks = taskRepository.findByAssignedToOrderByIdAsc(assignedTo);
+            if (includeTransfers) {
+                tasks = taskRepository.findByAssignedToOrTransferRequestedToOrderByIdAsc(assignedTo, assignedTo);
+            } else {
+                tasks = taskRepository.findByAssignedToOrderByIdAsc(assignedTo);
+            }
         } else {
             tasks = taskRepository.findAllByOrderByIdAsc();
         }
@@ -141,6 +149,10 @@ public class TaskService {
             }
         }
 
+        task.setTransferRequestedTo(req.getTransferRequestedTo());
+        task.setTransferRequestedBy(req.getTransferRequestedBy());
+        task.setTransferNote(req.getTransferNote());
+
         Task saved = taskRepository.save(task);
         List<TaskResponse> responses = attachComments(Collections.singletonList(saved));
         return Optional.of(responses.get(0));
@@ -200,6 +212,9 @@ public class TaskService {
         res.setStatus(t.getStatus());
         res.setCompleted(t.getCompleted());
         res.setAttachments(t.getAttachments());
+        res.setTransferRequestedTo(t.getTransferRequestedTo());
+        res.setTransferRequestedBy(t.getTransferRequestedBy());
+        res.setTransferNote(t.getTransferNote());
         res.setComments(comments != null ? comments : new ArrayList<>());
         return res;
     }

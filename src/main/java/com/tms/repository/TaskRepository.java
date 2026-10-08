@@ -11,6 +11,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findAllByOrderByIdAsc();
     List<Task> findByUserIdOrderByIdAsc(Integer userId);
     List<Task> findByAssignedToOrderByIdAsc(Integer assignedTo);
+    List<Task> findByAssignedToOrTransferRequestedToOrderByIdAsc(Integer assignedTo, Integer transferRequestedTo);
     List<Task> findByUserIdAndAssignedToOrderByIdAsc(Integer userId, Integer assignedTo);
     void deleteByUserId(Integer userId);
 }

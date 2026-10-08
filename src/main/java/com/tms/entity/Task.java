@@ -47,6 +47,15 @@ public class Task {
     @Column(name = "created_at", nullable = false)
     private Instant createdAt = Instant.now();
 
+    @Column(name = "transfer_requested_to")
+    private Integer transferRequestedTo;
+
+    @Column(name = "transfer_requested_by")
+    private Integer transferRequestedBy;
+
+    @Column(name = "transfer_note", columnDefinition = "TEXT")
+    private String transferNote;
+
     public Task() {
     }
 
@@ -163,6 +172,30 @@ public class Task {
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Integer getTransferRequestedTo() {
+        return transferRequestedTo;
+    }
+
+    public void setTransferRequestedTo(Integer transferRequestedTo) {
+        this.transferRequestedTo = transferRequestedTo;
+    }
+
+    public Integer getTransferRequestedBy() {
+        return transferRequestedBy;
+    }
+
+    public void setTransferRequestedBy(Integer transferRequestedBy) {
+        this.transferRequestedBy = transferRequestedBy;
+    }
+
+    public String getTransferNote() {
+        return transferNote;
+    }
+
+    public void setTransferNote(String transferNote) {
+        this.transferNote = transferNote;
     }
 }
 
